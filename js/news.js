@@ -7,12 +7,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const q = query(collection(db, "news"), orderBy("createdAt", "desc"));
 
   onSnapshot(q, (snapshot) => {
-    newsContainer.innerHTML = ""; // leeren
+    newsContainer.innerHTML = ""; // Container leeren
 
     snapshot.forEach((docSnap) => {
       const data = docSnap.data();
 
-      const newsItem = document.createElement("div");
+      const newsItem = document.createElement("article");
       newsItem.classList.add("news-item");
 
       newsItem.innerHTML = `
