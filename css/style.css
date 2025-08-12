@@ -1,0 +1,197 @@
+/* Farben */
+:root {
+  --orange: #ff7f11;
+  --light-blue: #5dade2;
+  --dark-blue: #154360;
+  --light-green: #58d68d;
+  --dark-green: #145214;
+  --background: #121212;
+  --text-color: #e0e0e0;
+}
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text-color);
+  font-family: 'Aptos', sans-serif;
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Überschriften */
+h1, h2, h3, h4, h5, h6 {
+  font-family: Impact, sans-serif;
+  color: var(--light-green);
+  margin-bottom: 0.5em;
+}
+
+/* Links */
+a {
+  color: var(--light-blue);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--orange);
+}
+
+/* Container */
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 2rem auto;
+}
+
+/* Navigation */
+nav {
+  background-color: var(--dark-blue);
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+nav .logo {
+  font-family: Impact, sans-serif;
+  font-size: 1.5rem;
+  color: var(--orange);
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+nav ul li a {
+  color: white;
+  font-weight: bold;
+  padding: 0.5rem 0;
+}
+
+nav ul li a:hover {
+  color: var(--light-green);
+}
+
+/* Burger Menu */
+.burger {
+  display: none;
+  cursor: pointer;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.burger div {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+}
+
+/* Responsive Navigation */
+@media (max-width: 768px) {
+  nav ul {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background-color: var(--dark-blue);
+    padding: 1rem 2rem;
+  }
+  nav ul.active {
+    display: flex;
+  }
+  .burger {
+    display: flex;
+  }
+}
+
+/* Buttons */
+button, input[type="submit"] {
+  background-color: var(--light-green);
+  border: none;
+  color: black;
+  font-weight: 700;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-family: 'Aptos', sans-serif;
+  font-size: 1rem;
+}
+
+button:hover, input[type="submit"]:hover {
+  background-color: var(--orange);
+  color: white;
+}
+
+/* Formulare */
+form {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 500px;
+}
+
+label {
+  font-weight: bold;
+  color: var(--light-green);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: none;
+  background-color: #222;
+  color: white;
+  font-family: 'Aptos', sans-serif;
+  font-size: 1rem;
+  resize: vertical;
+}
+
+textarea {
+  min-height: 100px;
+}
+
+/* Footer */
+footer {
+  margin-top: auto;
+  background-color: var(--dark-blue);
+  color: white;
+  text-align: center;
+  padding: 1rem 0;
+  font-size: 0.9rem;
+}
+
+/* Meldungen */
+.message {
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+}
+
+.message.error {
+  background-color: var(--orange);
+  color: white;
+}
+
+.message.success {
+  background-color: var(--light-green);
+  color: black;
+}
