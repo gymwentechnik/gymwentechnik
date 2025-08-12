@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Login - GymWen Technik</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Aptos&display=swap');
+    body {
+      background-color: #121212;
+      color: #ddd;
+      font-family: 'Aptos', sans-serif;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    h1 {
+      font-family: Impact, sans-serif;
+      color: orange;
+      margin-bottom: 20px;
+    }
+    form {
+      background-color: #1e1e1e;
+      padding: 30px;
+      border-radius: 10px;
+      width: 320px;
+      box-shadow: 0 0 15px rgba(255, 165, 0, 0.5);
+    }
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: orange;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #e67300;
+    }
+    .message {
+      color: #f44336;
+      margin-top: 10px;
+      min-height: 1.5em;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <h1>Admin Login - GymWen Technik</h1>
+    <form id="admin-login-form">
+      <input type="text" id="username" placeholder="Benutzername" required />
+      <input type="password" id="password" placeholder="Passwort" required />
+      <button type="submit">Anmelden</button>
+    </form>
+    <div id="message" class="message"></div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+
+    // Deine Firebase-Konfiguration hier einfügen:
+    const firebaseConfig = {
+      apiKey: "DEIN_API_KEY",
+      authDomain: "DEIN_PROJEKT.firebaseapp.com",
+      projectId: "DEIN_PROJEKT",
+      storageBucket: "DEIN_PROJEKT.appspot.com",
+      messagingSenderId: "DEINE_SENDER_ID",
+      appId: "DEINE_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const allowedUsername = "gwadmin";
+    const adminEmail = "gwadmin@gymwentechnik.de"; // Das ist die E-Mail in Firebase
+
+    const form = document.getElementById('admin-login-form');
+    const messageDiv = document.getElementById('message');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const username = form.username.value.trim();
+      const password = form.password.value.trim();
+
+      if (username !== allowedUsername) {
+        messageDiv.style.color = "#f44336";
+        messageDiv.textContent = "Zugriff verweigert: Falscher Benutzername.";
+        return;
+      }
+
+      try {
+        await signInWithEmailAndPassword(auth, adminEmail, password);
+        messageDiv.style.color = "lightgreen";
+        messageDiv.textContent = "Erfolgreich als Admin eingeloggt!";
+        // Hier kannst du weiterleiten, z.B.:
+        // window.location.href = "admin-dashboard.html";
+      } catch (error) {
+        messageDiv.style.color = "#f44336";
+        messageDiv.textContent = error.message;
+      }
+    });
+  </script>
+</body>
+</html>
