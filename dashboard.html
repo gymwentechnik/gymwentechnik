@@ -5,39 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dashboard – GymWen Technik</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Impact&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Aptos&display=swap');
-
     body {
-      margin: 0; background: #121212; color: white;
-      font-family: 'Aptos', sans-serif;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      height: 100vh;
+      background: #121212; color: white; font-family: Arial, sans-serif;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      height: 100vh; margin: 0;
     }
-
-    h1 {
-      font-family: 'Impact', sans-serif;
-      color: orange;
-      margin-bottom: 20px;
-    }
-
-    .user-info {
-      margin-bottom: 30px;
-      font-size: 1.2em;
-    }
-
     button {
-      padding: 12px 25px;
-      font-size: 1em;
+      padding: 10px 20px;
       background: orange;
       border: none;
       border-radius: 6px;
-      color: black;
       font-weight: bold;
       cursor: pointer;
+      font-size: 16px;
+      margin-top: 20px;
+      color: black;
     }
-
     button:hover {
       background: darkorange;
     }
@@ -45,14 +28,14 @@
 </head>
 <body>
 
-<h1>Dashboard</h1>
-<div class="user-info" id="user-info">Lade Benutzerinfo...</div>
-<button onclick="logout()">Logout</button>
+<h1 style="font-family: Impact, sans-serif; color: orange;">Willkommen im Dashboard</h1>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+<button id="logoutBtn">Logout</button>
 
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+<script>
   const firebaseConfig = {
     apiKey: "AIzaSyBNirG7l4kmG6noSRK9tr90TyhyQZ8n0nA",
     authDomain: "gymwen-technik.firebaseapp.com",
@@ -62,25 +45,23 @@
     appId: "1:218002112607:web:316bc316c6c78e889c1bea"
   };
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
 
-  const userInfo = document.getElementById("user-info");
-
-  onAuthStateChanged(auth, user => {
-    if (user) {
-      userInfo.textContent = `Angemeldet als: ${user.email}`;
-    } else {
-      // Nicht angemeldet? Zurück zum Login!
-      window.location.href = "login.html";
-    }
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    auth.signOut().then(() => {
+      window.location.href = 'login.html';
+    }).catch(error => {
+      alert("Logout fehlgeschlagen: " + error.message);
+    });
   });
 
-  function logout() {
-    signOut(auth).then(() => {
-      window.location.href = "login.html";
-    });
-  }
+  // Optional: Falls jemand ohne Login auf dashboard.html kommt, direkt zurückleiten
+  auth.onAuthStateChanged(user => {
+    if (!user) {
+      window.location.href = 'login.html';
+    }
+  });
 </script>
 
 </body>
