@@ -41,7 +41,9 @@
 <script>
   document.getElementById('logoutBtn').addEventListener('click', () => {
     // Auf index.html weiterleiten
-    window.location.href = 'index.html';
+    auth.signOut().then(() => {
+      window.location.href = 'index.html';
+    });
   });
 </script>
 
