@@ -1,205 +1,486 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>GymWen Technik - Dashboard</title>
-  <link rel="stylesheet" href="css/style.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GymWen Technik - Dashboard</title>
+<link rel="stylesheet" href="css/style.css" />
+<style>
+  body {
+    background-color: #121212;
+    color: #eee;
+    font-family: Aptos, sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    background-color: #065f46; /* dunkelgrün */
+    padding: 1rem 2rem;
+    font-family: Impact, sans-serif;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+  }
+  header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+  }
+  button.logout {
+    background-color: #b91c1c; /* rot */
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    font-family: Impact, sans-serif;
+    transition: background-color 0.3s ease;
+  }
+  button.logout:hover {
+    background-color: #ef4444; /* hellrot */
+  }
+
+  main {
+    flex-grow: 1;
+    padding: 2rem;
+    max-width: 960px;
+    margin: auto;
+    width: 100%;
+  }
+
+  h2 {
+    font-family: Impact, sans-serif;
+    color: #f97316; /* orange */
+  }
+
+  section {
+    margin-bottom: 2rem;
+    background-color: #222;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.7);
+  }
+
+  label {
+    display: block;
+    margin: 0.5rem 0 0.3rem;
+  }
+
+  input[type="email"],
+  input[type="password"],
+  input[type="text"],
+  textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: none;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    background-color: #333;
+    color: #eee;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  button {
+    background-color: #3b82f6; /* hellblau */
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    font-family: Impact, sans-serif;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #2563eb; /* dunkleres blau */
+  }
+
+  #message, #userMsg {
+    color: #10b981; /* hellgrün */
+    margin-top: 0.5rem;
+    font-weight: bold;
+  }
+
+  .errorMsg {
+    color: #f87171; /* hellrot */
+    margin-top: 0.5rem;
+    font-weight: bold;
+  }
+
+  #newsList, #filesList, #chatMessages {
+    max-height: 200px;
+    overflow-y: auto;
+    background: #111;
+    padding: 0.5rem;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+  }
+
+  .newsItem, .fileItem, .chatMessage {
+    padding: 0.3rem 0.5rem;
+    border-bottom: 1px solid #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .newsItem:last-child, .fileItem:last-child, .chatMessage:last-child {
+    border-bottom: none;
+  }
+
+  .btnDelete {
+    background-color: #b91c1c;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.8rem;
+    border-radius: 3px;
+    border: none;
+    cursor: pointer;
+    color: white;
+  }
+  .btnDelete:hover {
+    background-color: #ef4444;
+  }
+
+  #chatInput {
+    width: calc(100% - 100px);
+    margin-right: 10px;
+  }
+
+  #chatSendBtn {
+    width: 80px;
+  }
+</style>
 </head>
 <body>
 
-  <nav>
-    <div class="logo">GymWen Technik</div>
-    <div class="burger" id="burger">
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-    <ul id="nav-links">
-      <li><a href="index.html">Startseite</a></li>
-      <li><a href="ueber-uns.html">Über uns</a></li>
-      <li><a href="news.html">News</a></li>
-      <li><a href="kontakt.html">Kontakt</a></li>
-      <li><a href="login.html">Login</a></li>
-    </ul>
-  </nav>
+<header>
+  <h1>GymWen Technik - Dashboard</h1>
+  <button class="logout" id="logoutBtn">Logout</button>
+</header>
 
-  <main class="container" style="padding-top: 2rem; max-width: 900px;">
+<main>
+  <section id="welcomeSection">
+    <h2>Willkommen!</h2>
+    <p id="welcomeUser">Lade Benutzerdaten...</p>
+  </section>
 
-    <h1>Dashboard</h1>
+  <section id="adminSection" style="display:none;">
+    <h2>Neuen Benutzer anlegen</h2>
+    <form id="createUserForm">
+      <label for="newEmail">E-Mail</label>
+      <input type="email" id="newEmail" required placeholder="Benutzer E-Mail" />
 
-    <button id="logoutBtn" style="float:right; margin-bottom: 1rem;">Logout</button>
+      <label for="newPassword">Passwort</label>
+      <input type="password" id="newPassword" required placeholder="Passwort" />
 
-    <section id="news-section" style="margin-bottom: 2rem;">
-      <h2>News hinzufügen</h2>
-      <form id="newsForm">
-        <label for="newsTitle">Titel:</label>
-        <input type="text" id="newsTitle" name="newsTitle" required />
-        <label for="newsContent">Inhalt:</label>
-        <textarea id="newsContent" name="newsContent" required></textarea>
-        <input type="submit" value="News veröffentlichen" />
-      </form>
-      <p id="newsMsg" class="message"></p>
-    </section>
+      <button type="submit">Benutzer erstellen</button>
+      <p id="createUserMsg"></p>
+    </form>
+  </section>
 
-    <section id="files-section" style="margin-bottom: 2rem;">
-      <h2>Geteilte Dateien</h2>
-      <input type="file" id="fileUpload" />
-      <button id="uploadBtn">Datei hochladen</button>
-      <ul id="fileList"></ul>
-    </section>
+  <section id="newsSection">
+    <h2>News-Verwaltung</h2>
+    <form id="newsForm">
+      <label for="newsTitle">Titel</label>
+      <input type="text" id="newsTitle" required placeholder="Titel der News" />
+      <label for="newsContent">Inhalt</label>
+      <textarea id="newsContent" required placeholder="News-Inhalt"></textarea>
+      <button type="submit">News hinzufügen</button>
+    </form>
+    <div id="newsList">Lade News...</div>
+  </section>
 
-    <section id="chat-section" style="margin-bottom: 2rem;">
-      <h2>Chat</h2>
-      <div id="chatMessages" style="height: 200px; overflow-y: auto; background:#222; padding: 1rem; border-radius:8px; color:#eee; margin-bottom:0.5rem;"></div>
-      <input type="text" id="chatInput" placeholder="Nachricht eingeben..." />
-      <button id="sendChatBtn">Senden</button>
-    </section>
+  <section id="filesSection">
+    <h2>Datei-Upload (intern)</h2>
+    <input type="file" id="fileInput" />
+    <button id="uploadBtn">Hochladen</button>
+    <div id="filesList">Keine Dateien geladen.</div>
+  </section>
 
-  </main>
+  <section id="chatSection">
+    <h2>Interner Chat</h2>
+    <div id="chatMessages">Lade Chat...</div>
+    <input type="text" id="chatInput" placeholder="Nachricht eingeben..." />
+    <button id="chatSendBtn">Senden</button>
+  </section>
+</main>
 
-  <footer>
-    &copy; 2025 GymWen Technik – Gymnasium Wendelstein
-  </footer>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+  import {
+    getFirestore,
+    collection,
+    addDoc,
+    onSnapshot,
+    query,
+    orderBy,
+    deleteDoc,
+    doc,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+  import {
+    getStorage,
+    ref,
+    uploadBytes,
+    listAll,
+    getDownloadURL,
+    deleteObject
+  } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
 
-  <script>
-    // Burger Menü Funktion
-    const burger = document.getElementById('burger');
-    const navLinks = document.getElementById('nav-links');
-    burger.addEventListener('click', () => {
-      navLinks.classList.toggle('active');
-    });
-  </script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyBNirG7l4kmG6noSRK9tr90TyhyQZ8n0nA",
+    authDomain: "gymwen-technik.firebaseapp.com",
+    projectId: "gymwen-technik",
+    storageBucket: "gymwen-technik.appspot.com",
+    messagingSenderId: "218002112607",
+    appId: "1:218002112607:web:316bc316c6c78e889c1bea"
+  };
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-    import { getStorage, ref, uploadBytes, listAll, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const storage = getStorage(app);
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBNirG7l4kmG6noSRK9tr90TyhyQZ8n0nA",
-      authDomain: "gymwen-technik.firebaseapp.com",
-      projectId: "gymwen-technik",
-      storageBucket: "gymwen-technik.appspot.com",
-      messagingSenderId: "218002112607",
-      appId: "1:218002112607:web:316bc316c6c78e889c1bea"
-    };
+  const logoutBtn = document.getElementById('logoutBtn');
+  const welcomeUser = document.getElementById('welcomeUser');
+  const adminSection = document.getElementById('adminSection');
+  const createUserForm = document.getElementById('createUserForm');
+  const createUserMsg = document.getElementById('createUserMsg');
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const storage = getStorage(app);
+  const newsForm = document.getElementById('newsForm');
+  const newsList = document.getElementById('newsList');
 
-    // Sicherstellen, dass nur eingeloggte Nutzer draufkommen
-    onAuthStateChanged(auth, user => {
-      if (!user) {
-        window.location.href = "login.html";
-      }
-    });
+  const fileInput = document.getElementById('fileInput');
+  const uploadBtn = document.getElementById('uploadBtn');
+  const filesList = document.getElementById('filesList');
 
-    // Logout
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      signOut(auth).then(() => {
-        window.location.href = "index.html";
+  const chatMessages = document.getElementById('chatMessages');
+  const chatInput = document.getElementById('chatInput');
+  const chatSendBtn = document.getElementById('chatSendBtn');
+
+  // Auth prüfen und UI vorbereiten
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      window.location.href = "index.html";
+      return;
+    }
+    welcomeUser.textContent = `Eingeloggt als: ${user.email}`;
+
+    // Admin Bereich zeigen nur für gwadmin
+    if (user.email === "gwadmin@gymwentechnik.de") {
+      adminSection.style.display = "block";
+    } else {
+      adminSection.style.display = "none";
+    }
+
+    // News laden
+    loadNews();
+
+    // Dateien laden
+    loadFiles();
+
+    // Chat laden
+    setupChat();
+  });
+
+  logoutBtn.addEventListener('click', async () => {
+    await signOut(auth);
+    window.location.href = "index.html";
+  });
+
+  // Admin: Benutzer erstellen (nur UI, clientseitig Firebase SDK kann keine Nutzer anlegen!)
+  createUserForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    createUserMsg.textContent = "";
+    const email = document.getElementById('newEmail').value.trim();
+    const password = document.getElementById('newPassword').value;
+
+    if (auth.currentUser.email !== "gwadmin@gymwentechnik.de") {
+      createUserMsg.textContent = "Nur Admin darf Benutzer erstellen!";
+      createUserMsg.className = "errorMsg";
+      return;
+    }
+
+    // Hier würdest du eine Cloud Function oder Admin SDK API aufrufen,
+    // um den Benutzer serverseitig zu erstellen.
+    // Beispiel:
+    // await fetch('/createUser', { method: 'POST', body: JSON.stringify({email, password}) })
+
+    // Hier nur Demo-Text
+    createUserMsg.textContent = "Benutzererstellung funktioniert nur serverseitig.";
+    createUserMsg.className = "errorMsg";
+  });
+
+  // News hinzufügen
+  newsForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const title = document.getElementById('newsTitle').value.trim();
+    const content = document.getElementById('newsContent').value.trim();
+
+    if (!title || !content) return;
+
+    try {
+      await addDoc(collection(db, "news"), {
+        title,
+        content,
+        createdAt: serverTimestamp()
       });
-    });
+      newsForm.reset();
+    } catch (e) {
+      alert("Fehler beim Hinzufügen der News: " + e.message);
+    }
+  });
 
-    // News hinzufügen
-    const newsForm = document.getElementById("newsForm");
-    const newsMsg = document.getElementById("newsMsg");
-
-    newsForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const title = newsForm.newsTitle.value.trim();
-      const content = newsForm.newsContent.value.trim();
-
-      if (title && content) {
-        try {
-          await addDoc(collection(db, "news"), {
-            title,
-            content,
-            createdAt: new Date()
-          });
-          newsMsg.textContent = "News erfolgreich veröffentlicht.";
-          newsMsg.className = "message success";
-          newsForm.reset();
-        } catch (error) {
-          newsMsg.textContent = "Fehler beim Veröffentlichen: " + error.message;
-          newsMsg.className = "message error";
-        }
+  // News laden und live aktualisieren
+  function loadNews() {
+    const q = query(collection(db, "news"), orderBy("createdAt", "desc"));
+    onSnapshot(q, (snapshot) => {
+      newsList.innerHTML = "";
+      if (snapshot.empty) {
+        newsList.textContent = "Keine News vorhanden.";
+        return;
       }
-    });
+      snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        const div = document.createElement('div');
+        div.className = "newsItem";
+        div.innerHTML = `
+          <div>
+            <strong>${data.title}</strong><br />
+            <small>${data.createdAt?.toDate().toLocaleString() || ""}</small>
+            <p>${data.content}</p>
+          </div>
+          <button class="btnDelete" data-id="${docSnap.id}">Löschen</button>
+        `;
+        newsList.appendChild(div);
+      });
 
-    // Dateien verwalten
-    const fileUpload = document.getElementById("fileUpload");
-    const uploadBtn = document.getElementById("uploadBtn");
-    const fileList = document.getElementById("fileList");
-
-    uploadBtn.addEventListener("click", async () => {
-      if (fileUpload.files.length === 0) return alert("Bitte eine Datei auswählen!");
-      const file = fileUpload.files[0];
-      const fileRef = ref(storage, "shared-files/" + file.name);
-
-      try {
-        await uploadBytes(fileRef, file);
-        alert("Datei erfolgreich hochgeladen!");
-        fileUpload.value = "";
-        listFiles();
-      } catch (error) {
-        alert("Fehler beim Hochladen: " + error.message);
-      }
-    });
-
-    async function listFiles() {
-      fileList.innerHTML = "";
-      try {
-        const res = await listAll(ref(storage, "shared-files"));
-        for (const itemRef of res.items) {
-          const url = await getDownloadURL(itemRef);
-          const li = document.createElement("li");
-          li.innerHTML = `<a href="${url}" target="_blank">${itemRef.name}</a> <button data-name="${itemRef.name}">Löschen</button>`;
-          fileList.appendChild(li);
-        }
-
-        // Löschfunktion
-        fileList.querySelectorAll("button").forEach(btn => {
-          btn.addEventListener("click", async () => {
-            const filename = btn.getAttribute("data-name");
-            if (confirm(`Datei "${filename}" löschen?`)) {
-              const delRef = ref(storage, "shared-files/" + filename);
+      // Löschen-Buttons aktivieren (nur Admin)
+      if (auth.currentUser.email === "gwadmin@gymwentechnik.de") {
+        newsList.querySelectorAll('.btnDelete').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            if (confirm("News wirklich löschen?")) {
               try {
-                await deleteObject(delRef);
-                alert("Datei gelöscht.");
-                listFiles();
-              } catch (error) {
-                alert("Fehler beim Löschen: " + error.message);
+                await deleteDoc(doc(db, "news", btn.dataset.id));
+              } catch (e) {
+                alert("Fehler beim Löschen: " + e.message);
               }
             }
           });
         });
-
-      } catch (error) {
-        console.error("Fehler beim Auflisten der Dateien:", error);
       }
-    }
-
-    listFiles();
-
-    // Einfacher Chat (nur UI, Firebase-Chat-Logik aus Platzgründen später)
-    const chatInput = document.getElementById("chatInput");
-    const sendChatBtn = document.getElementById("sendChatBtn");
-    const chatMessages = document.getElementById("chatMessages");
-
-    sendChatBtn.addEventListener("click", () => {
-      const msg = chatInput.value.trim();
-      if (!msg) return;
-      // Hier kommt Firebase Chat-Code rein (z.B. addDoc in "chat" Collection)
-      chatInput.value = "";
-      alert("Chat-Funktion noch in Arbeit!");
     });
+  }
 
-  </script>
+  // Dateien laden
+  async function loadFiles() {
+    filesList.textContent = "Lade Dateien...";
+    const listRef = ref(storage, 'shared-files/');
+    try {
+      const res = await listAll(listRef);
+      filesList.innerHTML = "";
+      if (res.items.length === 0) {
+        filesList.textContent = "Keine Dateien vorhanden.";
+        return;
+      }
+      res.items.forEach(async (itemRef) => {
+        const url = await getDownloadURL(itemRef);
+        const div = document.createElement('div');
+        div.className = "fileItem";
+        div.innerHTML = `
+          <a href="${url}" target="_blank" rel="noopener noreferrer">${itemRef.name}</a>
+          ${auth.currentUser.email === "gwadmin@gymwentechnik.de" ? `<button class="btnDelete" data-name="${itemRef.name}">Löschen</button>` : ""}
+        `;
+        filesList.appendChild(div);
+      });
+
+      // Löschen-Buttons für Admin
+      if (auth.currentUser.email === "gwadmin@gymwentechnik.de") {
+        filesList.querySelectorAll('.btnDelete').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            if (confirm("Datei wirklich löschen?")) {
+              try {
+                await deleteObject(ref(storage, 'shared-files/' + btn.dataset.name));
+                loadFiles(); // neu laden
+              } catch (e) {
+                alert("Fehler beim Löschen: " + e.message);
+              }
+            }
+          });
+        });
+      }
+    } catch (e) {
+      filesList.textContent = "Fehler beim Laden der Dateien.";
+    }
+  }
+
+  // Datei-Upload
+  uploadBtn.addEventListener('click', async () => {
+    if (!fileInput.files.length) {
+      alert("Bitte Datei auswählen.");
+      return;
+    }
+    const file = fileInput.files[0];
+    const storageRef = ref(storage, 'shared-files/' + file.name);
+    try {
+      await uploadBytes(storageRef, file);
+      fileInput.value = "";
+      loadFiles();
+    } catch (e) {
+      alert("Fehler beim Hochladen: " + e.message);
+    }
+  });
+
+  // Chat-Funktion
+
+  const chatCollection = collection(db, "chat");
+
+  function setupChat() {
+    chatMessages.textContent = "";
+    const q = query(chatCollection, orderBy("createdAt", "asc"));
+    onSnapshot(q, (snapshot) => {
+      chatMessages.innerHTML = "";
+      if (snapshot.empty) {
+        chatMessages.textContent = "Noch keine Nachrichten.";
+        return;
+      }
+      snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        const div = document.createElement('div');
+        div.className = "chatMessage";
+        div.textContent = `${data.user}: ${data.message}`;
+        chatMessages.appendChild(div);
+      });
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+  }
+
+  chatSendBtn.addEventListener('click', async () => {
+    const msg = chatInput.value.trim();
+    if (!msg) return;
+    const user = auth.currentUser.email || "Anonym";
+    try {
+      await addDoc(chatCollection, {
+        user,
+        message: msg,
+        createdAt: serverTimestamp()
+      });
+      chatInput.value = "";
+    } catch (e) {
+      alert("Fehler beim Senden der Nachricht: " + e.message);
+    }
+  });
+
+</script>
 
 </body>
 </html>
