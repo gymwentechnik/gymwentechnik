@@ -105,7 +105,7 @@
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      // Login erfolgreich: Weiterleitung zur geschützten Seite
+      // Weiterleitung nach erfolgreichem Login
       window.location.href = "dashboard.html";
     } catch (error) {
       errorMsg.textContent = "Login fehlgeschlagen: " + error.message;
