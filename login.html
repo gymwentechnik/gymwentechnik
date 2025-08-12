@@ -3,106 +3,115 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login GymWen Technik</title>
+  <title>Login – GymWen Technik</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Impact&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Aptos&display=swap');
+
     body {
-      background-color: #121212;
-      color: #ddd;
+      margin: 0; background: #121212; color: white;
       font-family: 'Aptos', sans-serif;
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      display: flex; justify-content: center; align-items: center;
       height: 100vh;
     }
-    h1 {
-      font-family: Impact, sans-serif;
-      color: orange;
-      margin-bottom: 20px;
-    }
-    form {
-      background-color: #1e1e1e;
+
+    .login-box {
+      background: #1e1e1e;
       padding: 30px;
       border-radius: 10px;
       width: 320px;
-      box-shadow: 0 0 15px rgba(255, 165, 0, 0.5);
+      box-shadow: 0 0 15px rgba(255,165,0,0.5);
     }
-    input[type="email"], input[type="password"] {
+
+    h1 {
+      font-family: 'Impact', sans-serif;
+      color: orange;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    input {
       width: 100%;
       padding: 10px;
-      margin: 10px 0 20px;
-      border: none;
+      margin: 10px 0;
       border-radius: 5px;
-      font-size: 1rem;
+      border: none;
+      font-size: 1em;
+      background: #222;
+      color: white;
     }
+
     button {
       width: 100%;
       padding: 10px;
-      background-color: orange;
+      margin-top: 15px;
+      background: orange;
       border: none;
       border-radius: 5px;
+      color: black;
       font-weight: bold;
-      font-size: 1rem;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      font-size: 1em;
     }
+
     button:hover {
-      background-color: #e67300;
+      background: darkorange;
     }
-    .message {
-      color: #f44336;
+
+    .error-msg {
+      color: #ff4444;
       margin-top: 10px;
-      min-height: 1.5em;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <div>
-    <h1>Login - GymWen Technik</h1>
-    <form id="login-form">
-      <input type="email" id="email" placeholder="E-Mail" required />
-      <input type="password" id="password" placeholder="Passwort" required />
-      <button type="submit">Anmelden</button>
-    </form>
-    <div id="message" class="message"></div>
-  </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+<div class="login-box">
+  <h1>Login</h1>
+  <input type="email" id="email" placeholder="E-Mail" autocomplete="username" />
+  <input type="password" id="password" placeholder="Passwort" autocomplete="current-password" />
+  <button onclick="login()">Anmelden</button>
+  <div class="error-msg" id="error-msg"></div>
+</div>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBNirG7l4kmG6noSRK9tr90TyhyQZ8n0nA",  // Genau aus Firebase kopieren
-      authDomain: "gymwen-technik.firebaseapp.com",
-      projectId: "gymwen-technik",
-      storageBucket: "gymwen-technik.appspot.com",
-      messagingSenderId: "218002112607",
-      appId: "1:218002112607:web:316bc316c6c78e889c1bea"
-    };
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
-    const form = document.getElementById('login-form');
-    const messageDiv = document.getElementById('message');
+  const firebaseConfig = {
+    apiKey: "AIzaSyBNirG7l4kmG6noSRK9tr90TyhyQZ8n0nA",
+    authDomain: "gymwen-technik.firebaseapp.com",
+    projectId: "gymwen-technik",
+    storageBucket: "gymwen-technik.appspot.com",
+    messagingSenderId: "218002112607",
+    appId: "1:218002112607:web:316bc316c6c78e889c1bea"
+  };
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
 
-      const email = form.email.value.trim();
-      const password = form.password.value.trim();
+  async function login() {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
 
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        messageDiv.style.color = "lightgreen";
-        messageDiv.textContent = "Erfolgreich eingeloggt!";
-        // Hier kannst du weiterleiten, z.B.:
-        // window.location.href = "mitglieder-dashboard.html";
-      } catch (error) {
-        messageDiv.style.color = "#f44336";
-        messageDiv.textContent = error.message;
-      }
-    });
-  </script>
+    const errorMsg = document.getElementById("error-msg");
+    errorMsg.textContent = "";
+
+    if (!email || !password) {
+      errorMsg.textContent = "Bitte E-Mail und Passwort eingeben.";
+      return;
+    }
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      // Login erfolgreich: Weiterleitung zur geschützten Seite
+      window.location.href = "dashboard.html";
+    } catch (error) {
+      errorMsg.textContent = "Login fehlgeschlagen: " + error.message;
+    }
+  }
+</script>
+
 </body>
 </html>
