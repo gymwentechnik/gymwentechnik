@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GymWen Technik - Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav>
+    <div class="logo">GymWen Technik</div>
+    <div class="burger" id="burger">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <ul id="nav-links">
+      <li><a href="index.html">Startseite</a></li>
+      <li><a href="ueber-uns.html">Über uns</a></li>
+      <li><a href="news.html">News</a></li>
+      <li><a href="kontakt.html">Kontakt</a></li>
+      <li><a href="login.html">Login</a></li>
+    </ul>
+  </nav>
+
+  <main class="container" style="padding-top: 2rem; max-width: 900px;">
+
+    <h1>Dashboard</h1>
+
+    <button id="logoutBtn" style="float:right; margin-bottom: 1rem;">Logout</button>
+
+    <section id="news-section" style="margin-bottom: 2rem;">
+      <h2>News hinzufügen</h2>
+      <form id="newsForm">
+        <label for="newsTitle">Titel:</label>
+        <input type="text" id="newsTitle" name="newsTitle" required />
+        <label for="newsContent">Inhalt:</label>
+        <textarea id="newsContent" name="newsContent" required></textarea>
+        <input type="submit" value="News veröffentlichen" />
+      </form>
+      <p id="newsMsg" class="message"></p>
+    </section>
+
+    <section id="files-section" style="margin-bottom: 2rem;">
+      <h2>Geteilte Dateien</h2>
+      <input type="file" id="fileUpload" />
+      <button id="uploadBtn">Datei hochladen</button>
+      <ul id="fileList"></ul>
+    </section>
+
+    <section id="chat-section" style="margin-bottom: 2rem;">
+      <h2>Chat</h2>
+      <div id="chatMessages" style="height: 200px; overflow-y: auto; background:#222; padding: 1rem; border-radius:8px; color:#eee; margin-bottom:0.5rem;"></div>
+      <input type="text" id="chatInput" placeholder="Nachricht eingeben..." />
+      <button id="sendChatBtn">Senden</button>
+    </section>
+
+  </main>
+
+  <footer>
+    &copy; 2025 GymWen Technik – Gymnasium Wendelstein
+  </footer>
+
+  <script>
+    // Burger Menü Funktion
+    const burger = document.getElementById('burger');
+    const navLinks = document.getElementById('nav-links');
+    burger.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, listAll, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBNirG7l4kmG6noSRK9tr90TyhyQZ8n0nA",
+      authDomain: "gymwen-technik.firebaseapp.com",
+      projectId: "gymwen-technik",
+      storageBucket: "gymwen-technik.appspot.com",
+      messagingSenderId: "218002112607",
+      appId: "1:218002112607:web:316bc316c6c78e889c1bea"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    // Sicherstellen, dass nur eingeloggte Nutzer draufkommen
+    onAuthStateChanged(auth, user => {
+      if (!user) {
+        window.location.href = "login.html";
+      }
+    });
+
+    // Logout
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      signOut(auth).then(() => {
+        window.location.href = "index.html";
+      });
+    });
+
+    // News hinzufügen
+    const newsForm = document.getElementById("newsForm");
+    const newsMsg = document.getElementById("newsMsg");
+
+    newsForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const title = newsForm.newsTitle.value.trim();
+      const content = newsForm.newsContent.value.trim();
+
+      if (title && content) {
+        try {
+          await addDoc(collection(db, "news"), {
+            title,
+            content,
+            createdAt: new Date()
+          });
+          newsMsg.textContent = "News erfolgreich veröffentlicht.";
+          newsMsg.className = "message success";
+          newsForm.reset();
+        } catch (error) {
+          newsMsg.textContent = "Fehler beim Veröffentlichen: " + error.message;
+          newsMsg.className = "message error";
+        }
+      }
+    });
+
+    // Dateien verwalten
+    const fileUpload = document.getElementById("fileUpload");
+    const uploadBtn = document.getElementById("uploadBtn");
+    const fileList = document.getElementById("fileList");
+
+    uploadBtn.addEventListener("click", async () => {
+      if (fileUpload.files.length === 0) return alert("Bitte eine Datei auswählen!");
+      const file = fileUpload.files[0];
+      const fileRef = ref(storage, "shared-files/" + file.name);
+
+      try {
+        await uploadBytes(fileRef, file);
+        alert("Datei erfolgreich hochgeladen!");
+        fileUpload.value = "";
+        listFiles();
+      } catch (error) {
+        alert("Fehler beim Hochladen: " + error.message);
+      }
+    });
+
+    async function listFiles() {
+      fileList.innerHTML = "";
+      try {
+        const res = await listAll(ref(storage, "shared-files"));
+        for (const itemRef of res.items) {
+          const url = await getDownloadURL(itemRef);
+          const li = document.createElement("li");
+          li.innerHTML = `<a href="${url}" target="_blank">${itemRef.name}</a> <button data-name="${itemRef.name}">Löschen</button>`;
+          fileList.appendChild(li);
+        }
+
+        // Löschfunktion
+        fileList.querySelectorAll("button").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            const filename = btn.getAttribute("data-name");
+            if (confirm(`Datei "${filename}" löschen?`)) {
+              const delRef = ref(storage, "shared-files/" + filename);
+              try {
+                await deleteObject(delRef);
+                alert("Datei gelöscht.");
+                listFiles();
+              } catch (error) {
+                alert("Fehler beim Löschen: " + error.message);
+              }
+            }
+          });
+        });
+
+      } catch (error) {
+        console.error("Fehler beim Auflisten der Dateien:", error);
+      }
+    }
+
+    listFiles();
+
+    // Einfacher Chat (nur UI, Firebase-Chat-Logik aus Platzgründen später)
+    const chatInput = document.getElementById("chatInput");
+    const sendChatBtn = document.getElementById("sendChatBtn");
+    const chatMessages = document.getElementById("chatMessages");
+
+    sendChatBtn.addEventListener("click", () => {
+      const msg = chatInput.value.trim();
+      if (!msg) return;
+      // Hier kommt Firebase Chat-Code rein (z.B. addDoc in "chat" Collection)
+      chatInput.value = "";
+      alert("Chat-Funktion noch in Arbeit!");
+    });
+
+  </script>
+
+</body>
+</html>
