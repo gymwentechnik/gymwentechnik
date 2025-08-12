@@ -4,15 +4,93 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Login – GymWen Technik</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Impact&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Aptos&display=swap');
+
+    body {
+      margin: 0;
+      background: #121212;
+      color: white;
+      font-family: 'Aptos', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-box {
+      background: #1e1e1e;
+      padding: 30px;
+      border-radius: 10px;
+      width: 320px;
+      box-shadow: 0 0 15px rgba(255, 165, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+    }
+
+    h1 {
+      font-family: 'Impact', sans-serif;
+      color: orange;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    label {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    input {
+      margin-top: 5px;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      font-size: 1em;
+      background: #222;
+      color: white;
+      outline: none;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px;
+      background: orange;
+      border: none;
+      border-radius: 5px;
+      color: black;
+      font-weight: bold;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: darkorange;
+    }
+
+    .error-msg {
+      margin-top: 15px;
+      color: #ff4444;
+      text-align: center;
+      min-height: 1.2em;
+    }
+  </style>
 </head>
 <body>
 
-<div>
+<div class="login-box">
   <h1>Login</h1>
-  <input type="email" id="email" placeholder="E-Mail" />
-  <input type="password" id="password" placeholder="Passwort" />
+  
+  <label for="email">E-Mail</label>
+  <input type="email" id="email" placeholder="E-Mail" autocomplete="username" />
+
+  <label for="password">Passwort</label>
+  <input type="password" id="password" placeholder="Passwort" autocomplete="current-password" />
+
   <button id="loginBtn">Anmelden</button>
-  <div id="error-msg" style="color: red;"></div>
+
+  <div class="error-msg" id="error-msg"></div>
 </div>
 
 <script type="module">
@@ -46,7 +124,7 @@
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      window.location.href = "dashboard.html"; // Weiterleitung hier
+      window.location.href = "dashboard.html";
     } catch (error) {
       errorMsg.textContent = "Login fehlgeschlagen: " + error.message;
     }
