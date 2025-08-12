@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GymWen Technik - Startseite</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav>
+    <div class="logo">GymWen Technik</div>
+    <div class="burger" id="burger">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <ul id="nav-links">
+      <li><a href="index.html">Startseite</a></li>
+      <li><a href="ueber-uns.html">Über uns</a></li>
+      <li><a href="news.html">News</a></li>
+      <li><a href="kontakt.html">Kontakt</a></li>
+      <li><a href="login.html">Login</a></li>
+    </ul>
+  </nav>
+
+  <main class="container" style="text-align:center; padding-top: 3rem;">
+    <div class="logo-container">
+      <img src="assets/logo.png" alt="GymWen Technik Logo" />
+    </div>
+
+    <h1>Willkommen bei GymWen Technik</h1>
+    <p>Wir kümmern uns um Tontechnik, Lichttechnik, Bühnenprojektion und den Aufbau der Bühne.</p>
+    <p>Unsere Veranstaltungen: Konzerte, Theateraufführungen und Partys am Gymnasium Wendelstein.</p>
+  </main>
+
+  <footer>
+    &copy; 2025 GymWen Technik – Gymnasium Wendelstein
+  </footer>
+
+  <script>
+    // Burger Menü Funktion
+    const burger = document.getElementById('burger');
+    const navLinks = document.getElementById('nav-links');
+
+    burger.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
+  </script>
+
+</body>
+</html>
