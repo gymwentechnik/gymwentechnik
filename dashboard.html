@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard – GymWen Technik</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Impact&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Aptos&display=swap');
+
+    body {
+      margin: 0; background: #121212; color: white;
+      font-family: 'Aptos', sans-serif;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      height: 100vh;
+    }
+
+    h1 {
+      font-family: 'Impact', sans-serif;
+      color: orange;
+      margin-bottom: 20px;
+    }
+
+    .user-info {
+      margin-bottom: 30px;
+      font-size: 1.2em;
+    }
+
+    button {
+      padding: 12px 25px;
+      font-size: 1em;
+      background: orange;
+      border: none;
+      border-radius: 6px;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: darkorange;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Dashboard</h1>
+<div class="user-info" id="user-info">Lade Benutzerinfo...</div>
+<button onclick="logout()">Logout</button>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBNirG7l4kmG6noSRK9tr90TyhyQZ8n0nA",
+    authDomain: "gymwen-technik.firebaseapp.com",
+    projectId: "gymwen-technik",
+    storageBucket: "gymwen-technik.appspot.com",
+    messagingSenderId: "218002112607",
+    appId: "1:218002112607:web:316bc316c6c78e889c1bea"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  const userInfo = document.getElementById("user-info");
+
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      userInfo.textContent = `Angemeldet als: ${user.email}`;
+    } else {
+      // Nicht angemeldet? Zurück zum Login!
+      window.location.href = "login.html";
+    }
+  });
+
+  function logout() {
+    signOut(auth).then(() => {
+      window.location.href = "login.html";
+    });
+  }
+</script>
+
+</body>
+</html>
