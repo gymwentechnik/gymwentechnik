@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GymWen Technik - Login</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav>
+    <div class="logo">GymWen Technik</div>
+    <div class="burger" id="burger">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <ul id="nav-links">
+      <li><a href="index.html">Startseite</a></li>
+      <li><a href="ueber-uns.html">Über uns</a></li>
+      <li><a href="news.html">News</a></li>
+      <li><a href="kontakt.html">Kontakt</a></li>
+      <li><a href="login.html">Login</a></li>
+    </ul>
+  </nav>
+
+  <main class="container" style="text-align:center; padding-top: 3rem;">
+    <h1>Login</h1>
+    <button id="loginBtn">Mit Google anmelden</button>
+    <p id="message" class="message"></p>
+  </main>
+
+  <footer>
+    &copy; 2025 GymWen Technik – Gymnasium Wendelstein
+  </footer>
+
+  <script>
+    // Burger Menü Funktion
+    const burger = document.getElementById('burger');
+    const navLinks = document.getElementById('nav-links');
+    burger.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBNirG7l4kmG6noSRK9tr90TyhyQZ8n0nA",
+      authDomain: "gymwen-technik.firebaseapp.com",
+      projectId: "gymwen-technik",
+      storageBucket: "gymwen-technik.appspot.com",
+      messagingSenderId: "218002112607",
+      appId: "1:218002112607:web:316bc316c6c78e889c1bea"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    const loginBtn = document.getElementById("loginBtn");
+    const message = document.getElementById("message");
+
+    loginBtn.addEventListener("click", () => {
+      signInWithPopup(auth, provider)
+        .then(() => {
+          message.textContent = "Erfolgreich eingeloggt, leite weiter...";
+          setTimeout(() => {
+            window.location.href = "dashboard.html";
+          }, 1500);
+        })
+        .catch((error) => {
+          message.textContent = "Fehler beim Login: " + error.message;
+        });
+    });
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        window.location.href = "dashboard.html";
+      }
+    });
+  </script>
+
+</body>
+</html>
