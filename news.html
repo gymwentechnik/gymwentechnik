@@ -3,91 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>GymWen Technik - News</title>
+  <title>News - GymWen Technik</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
+  <header>
+    <h1>News - GymWen Technik</h1>
+    <nav>
+      <a href="index.html">Startseite</a> |
+      <a href="ueber-uns.html">Über uns</a> |
+      <a href="kontakt.html">Kontakt</a> |
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
 
-  <nav>
-    <div class="logo">GymWen Technik</div>
-    <div class="burger" id="burger">
-      <div></div><div></div><div></div>
-    </div>
-    <ul id="nav-links">
-      <li><a href="index.html">Startseite</a></li>
-      <li><a href="ueber-uns.html">Über uns</a></li>
-      <li><a href="news.html" class="active">News</a></li>
-      <li><a href="kontakt.html">Kontakt</a></li>
-      <li><a href="login.html">Login</a></li>
-    </ul>
-  </nav>
-
-  <main class="container" style="padding-top: 2rem; max-width: 900px;">
-    <h1>News</h1>
-    <section id="newsList">
-      <p>Lade News...</p>
+  <main>
+    <section id="newsContainer">
+      <!-- News-Einträge werden hier dynamisch geladen -->
     </section>
   </main>
 
   <footer>
-    &copy; 2025 GymWen Technik – Gymnasium Wendelstein
+    <p>© 2025 GymWen Technik</p>
   </footer>
 
-  <script>
-    // Burger Menü
-    const burger = document.getElementById('burger');
-    const navLinks = document.getElementById('nav-links');
-    burger.addEventListener('click', () => {
-      navLinks.classList.toggle('active');
-    });
-  </script>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getFirestore, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBNirG7l4kmG6noSRK9tr90TyhyQZ8n0nA",
-      authDomain: "gymwen-technik.firebaseapp.com",
-      projectId: "gymwen-technik",
-      storageBucket: "gymwen-technik.appspot.com",
-      messagingSenderId: "218002112607",
-      appId: "1:218002112607:web:316bc316c6c78e889c1bea"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    const newsList = document.getElementById('newsList');
-
-    const q = query(collection(db, "news"), orderBy("createdAt", "desc"));
-
-    onSnapshot(q, (querySnapshot) => {
-      newsList.innerHTML = "";
-      if (querySnapshot.empty) {
-        newsList.innerHTML = "<p>Keine News vorhanden.</p>";
-        return;
-      }
-      querySnapshot.forEach(doc => {
-        const data = doc.data();
-        const date = data.createdAt?.toDate ? data.createdAt.toDate() : new Date();
-        const formattedDate = date.toLocaleDateString("de-DE", {
-          day: "2-digit", month: "2-digit", year: "numeric",
-          hour: "2-digit", minute: "2-digit"
-        });
-
-        const newsItem = document.createElement("article");
-        newsItem.className = "news-item";
-        newsItem.innerHTML = `
-          <h2>${data.title}</h2>
-          <time datetime="${date.toISOString()}">${formattedDate}</time>
-          <p>${data.content}</p>
-          <hr />
-        `;
-        newsList.appendChild(newsItem);
-      });
-    });
-  </script>
-
+  <script type="module" src="js/news.js"></script>
 </body>
 </html>
