@@ -5,47 +5,93 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>GymWen Technik - Login</title>
   <link rel="stylesheet" href="css/style.css" />
+  <style>
+    body {
+      background-color: #121212;
+      color: #eee;
+      font-family: Aptos, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 1rem;
+    }
+    form {
+      background: #222;
+      padding: 2rem;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.7);
+    }
+    label {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-weight: 600;
+      font-family: Impact, sans-serif;
+      color: #f90; /* orange Akzent */
+    }
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1.2rem;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+      outline: 2px solid #3b82f6; /* hellblau */
+      background-color: #333;
+      color: #eee;
+    }
+    button {
+      width: 100%;
+      padding: 0.7rem;
+      background-color: #065f46; /* dunkelgrün */
+      color: white;
+      font-weight: bold;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      font-family: Impact, sans-serif;
+    }
+    button:hover {
+      background-color: #10b981; /* hellgrün */
+    }
+    .error {
+      background-color: #b91c1c; /* rot */
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border-radius: 4px;
+      color: white;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
 
-  <nav>
-    <div class="logo">GymWen Technik</div>
-    <div class="burger" id="burger">
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-    <ul id="nav-links">
-      <li><a href="index.html">Startseite</a></li>
-      <li><a href="ueber-uns.html">Über uns</a></li>
-      <li><a href="news.html">News</a></li>
-      <li><a href="kontakt.html">Kontakt</a></li>
-      <li><a href="login.html">Login</a></li>
-    </ul>
-  </nav>
+  <form id="loginForm" autocomplete="off" spellcheck="false">
+    <h2 style="font-family: Impact, sans-serif; color: #f90; text-align:center;">Login</h2>
+    <div id="error" class="error" style="display:none;"></div>
 
-  <main class="container" style="text-align:center; padding-top: 3rem;">
-    <h1>Login</h1>
-    <button id="loginBtn">Mit Google anmelden</button>
-    <p id="message" class="message"></p>
-  </main>
+    <label for="email">E-Mail</label>
+    <input type="email" id="email" name="email" placeholder="Deine E-Mail" required autocomplete="username" />
 
-  <footer>
-    &copy; 2025 GymWen Technik – Gymnasium Wendelstein
-  </footer>
+    <label for="password">Passwort</label>
+    <input type="password" id="password" name="password" placeholder="Dein Passwort" required autocomplete="current-password" />
 
-  <script>
-    // Burger Menü Funktion
-    const burger = document.getElementById('burger');
-    const navLinks = document.getElementById('nav-links');
-    burger.addEventListener('click', () => {
-      navLinks.classList.toggle('active');
-    });
-  </script>
+    <button type="submit">Anmelden</button>
+  </form>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBNirG7l4kmG6noSRK9tr90TyhyQZ8n0nA",
@@ -58,27 +104,23 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
 
-    const loginBtn = document.getElementById("loginBtn");
-    const message = document.getElementById("message");
+    const loginForm = document.getElementById('loginForm');
+    const errorDiv = document.getElementById('error');
 
-    loginBtn.addEventListener("click", () => {
-      signInWithPopup(auth, provider)
-        .then(() => {
-          message.textContent = "Erfolgreich eingeloggt, leite weiter...";
-          setTimeout(() => {
-            window.location.href = "dashboard.html";
-          }, 1500);
-        })
-        .catch((error) => {
-          message.textContent = "Fehler beim Login: " + error.message;
-        });
-    });
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorDiv.style.display = 'none';
+      const email = loginForm.email.value.trim();
+      const password = loginForm.password.value;
 
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        // Erfolgreich eingeloggt - weiterleiten
         window.location.href = "dashboard.html";
+      } catch (err) {
+        errorDiv.textContent = "Login fehlgeschlagen: " + err.message;
+        errorDiv.style.display = 'block';
       }
     });
   </script>
