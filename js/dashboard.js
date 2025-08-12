@@ -1,111 +1,54 @@
 // js/dashboard.js
 import { auth, db } from "./firebase-config.js";
 import {
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
-
-import {
   collection,
   addDoc,
   query,
   orderBy,
   onSnapshot,
-  serverTimestamp,
-  deleteDoc,
-  doc
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const newsForm = document.getElementById("newsForm");
-  const newsTitle = document.getElementById("newsTitle");
-  const newsContent = document.getElementById("newsContent");
-  const newsContainer = document.getElementById("newsContainer");
-  const logoutBtn = document.getElementById("logoutBtn");
-  const adminEmail = "gwadmin@gymwentechnik.de";
+  const chatMessages = document.getElementById("chatMessages");
+  const chatForm = document.getElementById("chatForm");
+  const chatInput = document.getElementById("chatInput");
 
-  // Auth Status prüfen
-  onAuthStateChanged(auth, (user) => {
-    if (!user) {
-      // Nicht eingeloggt? Zurück zum Login
-      window.location.href = "login.html";
-      return;
-    }
+  const chatCollection = collection(db, "chatMessages");
+  const chatQuery = query(chatCollection, orderBy("createdAt"));
 
-    // Optional: Begrüßung o.Ä. mit user.email
-    console.log("Eingeloggt als:", user.email);
-  });
-
-  // Logout Button
-  logoutBtn.addEventListener("click", async () => {
-    await signOut(auth);
-    window.location.href = "index.html"; // Startseite nach Logout
-  });
-
-  // News hinzufügen (nur Admin)
-  newsForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const user = auth.currentUser;
-    if (!user || user.email !== adminEmail) {
-      alert("Nur Admin darf News hinzufügen.");
-      return;
-    }
-
-    const title = newsTitle.value.trim();
-    const content = newsContent.value.trim();
-
-    if (!title || !content) {
-      alert("Bitte Titel und Inhalt eingeben.");
-      return;
-    }
-
-    try {
-      await addDoc(collection(db, "news"), {
-        title,
-        content,
-        createdAt: serverTimestamp(),
-        author: user.email
-      });
-      newsForm.reset();
-      alert("News erfolgreich hinzugefügt!");
-    } catch (error) {
-      alert("Fehler beim Hinzufügen: " + error.message);
-    }
-  });
-
-  // News laden und anzeigen
-  const q = query(collection(db, "news"), orderBy("createdAt", "desc"));
-  onSnapshot(q, (snapshot) => {
-    newsContainer.innerHTML = ""; // Leeren
-
+  // Chat-Nachrichten in Echtzeit laden
+  onSnapshot(chatQuery, (snapshot) => {
+    chatMessages.innerHTML = "";
     snapshot.forEach((docSnap) => {
       const data = docSnap.data();
-
-      const newsItem = document.createElement("div");
-      newsItem.classList.add("news-item");
-
-      newsItem.innerHTML = `
-        <h3>${data.title}</h3>
-        <p>${data.content}</p>
-        <small>von ${data.author || "Unbekannt"} am ${
-        data.createdAt ? data.createdAt.toDate().toLocaleString() : ""
-      }</small>
-      `;
-
-      // Admin darf News löschen
-      if (auth.currentUser && auth.currentUser.email === adminEmail) {
-        const delBtn = document.createElement("button");
-        delBtn.textContent = "Löschen";
-        delBtn.addEventListener("click", async () => {
-          if (confirm("News wirklich löschen?")) {
-            await deleteDoc(doc(db, "news", docSnap.id));
-          }
-        });
-        newsItem.appendChild(delBtn);
-      }
-
-      newsContainer.appendChild(newsItem);
+      const msg = document.createElement("div");
+      msg.textContent = `${data.author}: ${data.text}`;
+      chatMessages.appendChild(msg);
     });
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  });
+
+  // Nachricht senden
+  chatForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const user = auth.currentUser;
+    if (!user) {
+      alert("Bitte einloggen, um chatten zu können.");
+      return;
+    }
+    const text = chatInput.value.trim();
+    if (text.length === 0) return;
+
+    try {
+      await addDoc(chatCollection, {
+        text,
+        author: user.email,
+        createdAt: serverTimestamp()
+      });
+      chatInput.value = "";
+    } catch (error) {
+      alert("Fehler beim Senden: " + error.message);
+    }
   });
 });
