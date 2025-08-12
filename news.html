@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>News – GymWen Technik</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Impact&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Aptos&display=swap');
+
+    body {
+      margin: 0;
+      font-family: 'Aptos', sans-serif;
+      background-color: #121212;
+      color: white;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      background-color: #1e1e1e;
+    }
+
+    .logo {
+      font-family: 'Impact', sans-serif;
+      font-size: 1.5em;
+      color: orange;
+    }
+
+    .menu-icon {
+      font-size: 1.8em;
+      cursor: pointer;
+    }
+
+    nav {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 60px;
+      right: 20px;
+      background-color: #1e1e1e;
+      border: 1px solid #444;
+      border-radius: 5px;
+      padding: 10px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      padding: 10px;
+      border-radius: 4px;
+      display: block;
+    }
+
+    nav a:hover {
+      background-color: #333;
+    }
+
+    section {
+      padding: 20px;
+    }
+
+    h1 {
+      font-family: 'Impact', sans-serif;
+    }
+
+    .news-item {
+      background: #1e1e1e;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border-left: 5px solid orange;
+    }
+
+    .news-item h3 {
+      margin-top: 0;
+      color: orange;
+    }
+
+    .form-container {
+      background: #1e1e1e;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .form-container input,
+    .form-container textarea,
+    .form-container button {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+      border: none;
+      border-radius: 4px;
+      font-family: 'Aptos', sans-serif;
+    }
+
+    .form-container input,
+    .form-container textarea {
+      background: #222;
+      color: white;
+    }
+
+    .form-container button {
+      background: orange;
+      color: black;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .form-container button:hover {
+      background: darkorange;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">GymWen Technik</div>
+  <div class="menu-icon" onclick="toggleMenu()">☰</div>
+  <nav id="menu">
+    <a href="/index.html">Startseite</a>
+    <a href="/ueber-uns.html">Über uns</a>
+    <a href="/news.html">News</a>
+    <a href="/kontakt.html">Kontakt</a>
+    <a href="/login.html">Login</a>
+  </nav>
+</header>
+
+<section>
+  <h1>Neuigkeiten</h1>
+
+  <div class="form-container">
+    <h2>Neue News hinzufügen</h2>
+    <input type="text" id="news-title" placeholder="Titel der News">
+    <textarea id="news-content" rows="4" placeholder="Inhalt der News"></textarea>
+    <button onclick="addNews()">News hinzufügen</button>
+  </div>
+
+  <div id="news-list">
+    <!-- News werden hier eingefügt -->
+  </div>
+</section>
+
+<script>
+  function toggleMenu() {
+    const menu = document.getElementById('menu');
+    menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex';
+  }
+
+  function addNews() {
+    const title = document.getElementById('news-title').value.trim();
+    const content = document.getElementById('news-content').value.trim();
+
+    if (!title || !content) {
+      alert('Bitte Titel und Inhalt eingeben.');
+      return;
+    }
+
+    const newsList = document.getElementById('news-list');
+
+    const newsItem = document.createElement('div');
+    newsItem.classList.add('news-item');
+
+    const newsTitle = document.createElement('h3');
+    newsTitle.textContent = title;
+
+    const newsContent = document.createElement('p');
+    newsContent.textContent = content;
+
+    newsItem.appendChild(newsTitle);
+    newsItem.appendChild(newsContent);
+
+    newsList.insertBefore(newsItem, newsList.firstChild);
+
+    // Felder leeren
+    document.getElementById('news-title').value = '';
+    document.getElementById('news-content').value = '';
+  }
+</script>
+
+</body>
+</html>
