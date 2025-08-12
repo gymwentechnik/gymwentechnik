@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GymWen Technik - Über uns</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav>
+    <div class="logo">GymWen Technik</div>
+    <div class="burger" id="burger">
+      <div></div><div></div><div></div>
+    </div>
+    <ul id="nav-links">
+      <li><a href="index.html">Startseite</a></li>
+      <li><a href="ueber-uns.html" class="active">Über uns</a></li>
+      <li><a href="news.html">News</a></li>
+      <li><a href="kontakt.html">Kontakt</a></li>
+      <li><a href="login.html">Login</a></li>
+    </ul>
+  </nav>
+
+  <main class="container" style="padding-top: 2rem; max-width: 900px;">
+    <h1>Über uns</h1>
+    <p>
+      Wir sind <strong>GymWen Technik</strong>, der Wahlkurs Bühnentechnik am Gymnasium Wendelstein.
+      Unser Schwerpunkt liegt auf Tontechnik, Lichttechnik, Bühnenprojektion sowie dem Aufbau der Bühne.
+      Anders als klassische Schulfeste organisieren wir hauptsächlich Konzerte, Theateraufführungen und Partys.
+    </p>
+    <p>
+      Unsere Mitglieder sind engagierte Schüler:innen, die Interesse an moderner Veranstaltungstechnik haben
+      und praktische Erfahrungen sammeln möchten. Wir freuen uns über neue Technikbegeisterte, die Lust haben,
+      bei unseren Projekten mitzumachen!
+    </p>
+  </main>
+
+  <footer>
+    &copy; 2025 GymWen Technik – Gymnasium Wendelstein
+  </footer>
+
+  <script>
+    // Burger Menü
+    const burger = document.getElementById('burger');
+    const navLinks = document.getElementById('nav-links');
+    burger.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
+  </script>
+
+</body>
+</html>
