@@ -4,75 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Login – GymWen Technik</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Impact&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Aptos&display=swap');
-
-    body {
-      margin: 0; background: #121212; color: white;
-      font-family: 'Aptos', sans-serif;
-      display: flex; justify-content: center; align-items: center;
-      height: 100vh;
-    }
-
-    .login-box {
-      background: #1e1e1e;
-      padding: 30px;
-      border-radius: 10px;
-      width: 320px;
-      box-shadow: 0 0 15px rgba(255,165,0,0.5);
-    }
-
-    h1 {
-      font-family: 'Impact', sans-serif;
-      color: orange;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    input {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 5px;
-      border: none;
-      font-size: 1em;
-      background: #222;
-      color: white;
-    }
-
-    button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 15px;
-      background: orange;
-      border: none;
-      border-radius: 5px;
-      color: black;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 1em;
-    }
-
-    button:hover {
-      background: darkorange;
-    }
-
-    .error-msg {
-      color: #ff4444;
-      margin-top: 10px;
-      text-align: center;
-    }
-  </style>
 </head>
 <body>
 
-<div class="login-box">
+<div>
   <h1>Login</h1>
-  <input type="email" id="email" placeholder="E-Mail" autocomplete="username" />
-  <input type="password" id="password" placeholder="Passwort" autocomplete="current-password" />
-  <button onclick="login()">Anmelden</button>
-  <div class="error-msg" id="error-msg"></div>
+  <input type="email" id="email" placeholder="E-Mail" />
+  <input type="password" id="password" placeholder="Passwort" />
+  <button id="loginBtn">Anmelden</button>
+  <div id="error-msg" style="color: red;"></div>
 </div>
 
 <script type="module">
@@ -91,12 +31,13 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
-  async function login() {
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
+  const loginBtn = document.getElementById('loginBtn');
+  const errorMsg = document.getElementById('error-msg');
 
-    const errorMsg = document.getElementById("error-msg");
+  loginBtn.addEventListener('click', async () => {
     errorMsg.textContent = "";
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
 
     if (!email || !password) {
       errorMsg.textContent = "Bitte E-Mail und Passwort eingeben.";
@@ -105,12 +46,11 @@
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      // Weiterleitung nach erfolgreichem Login
-      window.location.href = "dashboard.html";
+      window.location.href = "dashboard.html"; // Weiterleitung hier
     } catch (error) {
       errorMsg.textContent = "Login fehlgeschlagen: " + error.message;
     }
-  }
+  });
 </script>
 
 </body>
