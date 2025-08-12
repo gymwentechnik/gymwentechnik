@@ -6,9 +6,15 @@
   <title>Dashboard – GymWen Technik</title>
   <style>
     body {
-      background: #121212; color: white; font-family: Arial, sans-serif;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      height: 100vh; margin: 0;
+      background: #121212; 
+      color: white; 
+      font-family: Arial, sans-serif;
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center;
+      height: 100vh; 
+      margin: 0;
     }
     button {
       padding: 10px 20px;
@@ -32,35 +38,10 @@
 
 <button id="logoutBtn">Logout</button>
 
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-
 <script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyBNirG7l4kmG6noSRK9tr90TyhyQZ8n0nA",
-    authDomain: "gymwen-technik.firebaseapp.com",
-    projectId: "gymwen-technik",
-    storageBucket: "gymwen-technik.appspot.com",
-    messagingSenderId: "218002112607",
-    appId: "1:218002112607:web:316bc316c6c78e889c1bea"
-  };
-
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-
   document.getElementById('logoutBtn').addEventListener('click', () => {
-    auth.signOut().then(() => {
-      window.location.href = 'login.html';
-    }).catch(error => {
-      alert("Logout fehlgeschlagen: " + error.message);
-    });
-  });
-
-  // Optional: Falls jemand ohne Login auf dashboard.html kommt, direkt zurückleiten
-  auth.onAuthStateChanged(user => {
-    if (!user) {
-      window.location.href = 'login.html';
-    }
+    // Einfach auf Startseite weiterleiten, ohne Firebase-Logout
+    window.location.href = 'home.html';
   });
 </script>
 
