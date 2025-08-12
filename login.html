@@ -6,51 +6,28 @@
   <title>Login – GymWen Technik</title>
   <style>
     body {
-      margin: 0;
-      background: #121212;
-      color: white;
+      margin: 0; background: #121212; color: white;
       font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      display: flex; justify-content: center; align-items: center;
       height: 100vh;
     }
     #loginBox {
-      background: #1e1e1e;
-      padding: 20px;
-      border-radius: 8px;
-      width: 300px;
-      box-shadow: 0 0 10px orange;
+      background: #1e1e1e; padding: 20px; border-radius: 8px;
+      width: 320px; box-shadow: 0 0 10px orange;
     }
     input {
-      width: 100%;
-      margin: 10px 0;
-      padding: 10px;
-      border: none;
-      border-radius: 4px;
-      background: #222;
-      color: white;
-      font-size: 16px;
+      width: 100%; margin: 10px 0; padding: 10px;
+      border: none; border-radius: 5px; background: #222;
+      color: white; font-size: 16px;
     }
     button {
-      width: 100%;
-      padding: 10px;
-      background: orange;
-      border: none;
-      border-radius: 4px;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 16px;
+      width: 100%; padding: 10px; background: orange;
+      border: none; border-radius: 5px; font-weight: bold;
+      cursor: pointer; font-size: 16px;
     }
-    button:hover {
-      background: darkorange;
-    }
+    button:hover { background: darkorange; }
     #errorMsg {
-      color: #ff5555;
-      margin-top: 10px;
-      min-height: 20px;
-      font-size: 14px;
-      text-align: center;
+      color: #ff4444; margin-top: 12px; min-height: 20px; text-align: center;
     }
   </style>
 </head>
@@ -58,19 +35,16 @@
 
 <div id="loginBox">
   <h2 style="color:orange; font-family: Impact, sans-serif; text-align:center;">Login</h2>
-  <input type="email" id="email" placeholder="E-Mail" />
-  <input type="password" id="password" placeholder="Passwort" />
+  <input type="email" id="email" placeholder="E-Mail" autocomplete="username" />
+  <input type="password" id="password" placeholder="Passwort" autocomplete="current-password" />
   <button id="loginBtn">Anmelden</button>
   <div id="errorMsg"></div>
 </div>
 
-<!-- Firebase App (the core Firebase SDK) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<!-- Firebase Auth -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
 <script>
-  // Deine Firebase-Konfiguration
   const firebaseConfig = {
     apiKey: "AIzaSyBNirG7l4kmG6noSRK9tr90TyhyQZ8n0nA",
     authDomain: "gymwen-technik.firebaseapp.com",
@@ -80,29 +54,26 @@
     appId: "1:218002112607:web:316bc316c6c78e889c1bea"
   };
 
-  // Firebase initialisieren
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
 
-  const loginBtn = document.getElementById('loginBtn');
-  const errorMsg = document.getElementById('errorMsg');
-
-  loginBtn.addEventListener('click', function() {
-    errorMsg.textContent = '';
+  document.getElementById('loginBtn').addEventListener('click', function() {
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
+    const errorMsg = document.getElementById('errorMsg');
+    errorMsg.textContent = '';
 
     if (!email || !password) {
-      errorMsg.textContent = "Bitte E-Mail und Passwort eingeben.";
+      errorMsg.textContent = 'Bitte E-Mail und Passwort eingeben.';
       return;
     }
 
     auth.signInWithEmailAndPassword(email, password)
       .then(() => {
-        window.location.href = "dashboard.html";
+        window.location.href = 'dashboard.html';
       })
-      .catch((error) => {
-        errorMsg.textContent = "Login fehlgeschlagen: " + error.message;
+      .catch(error => {
+        errorMsg.textContent = 'Login fehlgeschlagen: ' + error.message;
       });
   });
 </script>
